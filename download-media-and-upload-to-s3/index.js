@@ -31,8 +31,10 @@ export const handler = async (event) => {
     Body: Buffer.from(mediaResponse.data),
     ContentType: mediaResponse.headers?.["content-type"],
   };
-
+  const uploadedUrl = `https://${process.env.S3_BUCKET}.s3.${process.env.S3_REGION}.amazonaws.com/${uploadPath}/${fileName}`;
   await client.send(new PutObjectCommand(uploadParams));
 
-  return event;
+  return {
+    url: uploadedUrl,
+  };
 };
