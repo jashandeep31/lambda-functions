@@ -1,7 +1,6 @@
 import axios from "axios";
 import dotenv from "dotenv";
 dotenv.config();
-import fs from "fs";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 const client = new S3Client({
@@ -21,25 +20,19 @@ export const handler = async (event) => {
   }
 
   // Downloading the media using axios
-  const mediaBuffer = await axios.get(mediaUrl, {
+  const mediaResponse = await axios.get(mediaUrl, {
     responseType: "arraybuffer",
   });
 
-  // Storing locally
-  fs.writeFileSync(fileName, mediaBuffer.data);
-
-  //   Uploading to S3
+  // Uploading directly to S3 without writing to the filesystem
   const uploadParams = {
     Bucket: process.env.S3_BUCKET,
     Key: uploadPath + "/" + fileName,
-    Body: fs.createReadStream(fileName),
+    Body: Buffer.from(mediaResponse.data),
+    ContentType: mediaResponse.headers?.["content-type"],
   };
 
   await client.send(new PutObjectCommand(uploadParams));
-
-  // Deleting the file Just to keep the github repo clean
-  //   although the lamda function are self destructing
-  fs.unlinkSync(fileName);
 
   return event;
 };
