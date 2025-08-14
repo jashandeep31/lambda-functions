@@ -7,8 +7,8 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 const client = new S3Client({
   region: process.env.S3_REGION,
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    accessKeyId: process.env.S3_BUCKET_ACCESS_KEY_ID,
+    secretAccessKey: process.env.S3_BUCKET_SECRET_ACCESS_KEY,
   },
 });
 
@@ -43,10 +43,3 @@ export const handler = async (event) => {
 
   return event;
 };
-
-handler({
-  mediaUrl:
-    "https://images.unsplash.com/photo-1526779259212-939e64788e3c?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZnJlZSUyMGltYWdlc3xlbnwwfHwwfHx8MA%3D%3D",
-  uploadPath: "testing-lambda",
-  fileName: "image.jpg",
-});
