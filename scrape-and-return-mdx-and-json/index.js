@@ -257,6 +257,3 @@ export const handler = async (event) => {
   await browser.close();
   return result;
 };
-
-// Example run
-handler({ url: "https://www.prisma.io/blog" });
