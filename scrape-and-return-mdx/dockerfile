@@ -1,0 +1,16 @@
+FROM public.ecr.aws/lambda/nodejs:latest
+# FROM public.ecr.aws/docker/library/node:latest
+
+
+WORKDIR /var/task
+
+    
+COPY package.json tsconfig.json ./
+    
+RUN npm install
+
+COPY . . 
+
+RUN npm run build
+
+CMD ["dist/index.handler"]
